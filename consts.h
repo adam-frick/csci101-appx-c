@@ -1,4 +1,5 @@
 #ifndef CONSTS_H
+#define CONSTS_H
 
 #include <stdint.h>
 
