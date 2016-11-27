@@ -1,0 +1,7 @@
+# .txt extension only in directory for input
+*.txt
+
+# compilation extensions
+*.d
+*.o
+*.a
