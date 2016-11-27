@@ -5,3 +5,6 @@
 *.d
 *.o
 *.a
+
+# binary
+*appx_c
