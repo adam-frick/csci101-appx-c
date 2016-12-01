@@ -7,6 +7,7 @@ LDFLAGS =
 
 $(bin): $(obj)
 	$(CC) -o $@ $^ $(FLAGS) $(LDFLAGS)
+	rm -f $(obj)
 
 .PHONY: clean
 clean:

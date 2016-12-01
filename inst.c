@@ -6,6 +6,7 @@ const char* const OP_V = "--------->";
 #define F_EXP(x) ((x >> 4) & 0x7)
 #define F_SGN(x) ((x >> 7) & 0x1)
 #define F_MAX 1
+#define F_RDX 0xF
 
 bool ldr(InstArg *arg) {
     arg->reg[OP_N2] = arg->mem[OP_B2];
@@ -52,11 +53,12 @@ bool adt(InstArg *arg) {
 
 bool adf(InstArg *arg) {
     // remove when done
-    puts("Incomplete.");
-    return false;
+    //puts("Incomplete.");
+    //return false;
 
     uint32_t R[F_MAX+1] = {arg->reg[OP_N3], arg->reg[OP_N4]};
 
+    uint32_t F[F_MAX+1];
     
     printf("SGN1: %x, EXP1: %x, MNT1: %x\n"
            "SGN2: %x, EXP2: %x, MNT2: %x\n",
@@ -65,18 +67,19 @@ bool adf(InstArg *arg) {
 
 
     for (int i = 0; i < F_MAX + 1; i++) {
-        // convert f_exp to excess
-        R[i] = F_MNT(R[i]) >> F_EXP(R[i]);
+        // convert f_exp and f_mnt using sign extension and casting
+        F[i] = F_MNT(R[i]) << F_RDX >> F_EXP(R[i]);
 
         uint8_t LSSB;
 
-        for (LSSB = 0x0; LSSB < 0x9; LSSB++) {
-            if ((R[i] >> LSSB) & 0x1) {
+        for (LSSB = 0x0; LSSB < 0x32; LSSB++) {
+            printf("%x for %x\n", F[i] >> LSSB, LSSB);
+            if ((F[i] >> LSSB) & 0x1) {
                 printf("bit #%x is set\n", LSSB);
                 break;
             }
         }
-        if (LSSB == 0x9) {
+        if (LSSB == 0x32) {
             puts("Mantissa is 0");
             LSSB = 0;
         }

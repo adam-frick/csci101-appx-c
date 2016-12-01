@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "inst.h"
+#include "consts.h"
 
 uint8_t reg [REG_MAX+1] = {'\0'};
 uint8_t mem [MEM_MAX+1] = {'\0'};
