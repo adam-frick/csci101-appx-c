@@ -69,25 +69,31 @@ bool adf(InstArg *arg) {
             F_SGN(R[0]), F_EXP(R[0]), F_MNT(R[0]),
             F_SGN(R[1]), F_EXP(R[1]), F_MNT(R[1]));
 
-    uint32_t F1 = adf_conv(F_MNT(R[0]), F_EXP(R[0]), F_SGN(R[0]));
-    uint32_t F2 = adf_conv(F_MNT(R[1]), F_EXP(R[1]), F_SGN(R[1]));
+    uint32_t F1 = adf_conv(F_MNT(R[0]), F_EXP(R[0]), F_SGN(R[0]), false);
+    uint32_t F2 = adf_conv(F_MNT(R[1]), F_EXP(R[1]), F_SGN(R[1]), false);
 
     printf("F1: %f\n", *(float *) &F1);
     bit_print(F1);
     printf("F2: %f\n", *(float *) &F2);
     bit_print(F2);
 
-    float res = (*(float *) &F1) + (*(float *) &F2);
+    float res_c = (*(float *) &F1) + (*(float *) &F2);
+    uint32_t res_c_int = *(uint32_t*) &res_c;
 
-    printf("sum: %f\n", res);
-    bit_print(*(uint32_t *) &res);
+    printf("sum: %f\n", res_c);
+    bit_print(res_c_int);
+
+    uint8_t mnt_t = F_MNT(res_c_int);
+    uint8_t exp_t = (res_c_int << F_MNT_C) & 0x07; // sign "contraction" first
+    uint8_t sgn_t = (res_c_int << (F_MNT_C + F_EXP_C)) & 0x01;
+    // implement in adf_conv with true parameter
 
     pci(arg);
     return true;
 }
 
-uint32_t adf_conv(uint8_t mnt, uint8_t exp, uint8_t sgn) {
-    exp ^= 0x04;
+uint32_t adf_conv(uint8_t mnt, uint8_t exp, uint8_t sgn, bool rev) {
+    exp ^= (0x01 << 2);
     bool MSB = exp >> (F_EXP_T - 1) & 1;
     uint16_t exp_ext = (MSB ? F_EXP_M | exp : exp) ^ 0x80;
     return mnt | (exp_ext << F_MNT_C) | ( sgn << (F_MNT_C + F_EXP_C));

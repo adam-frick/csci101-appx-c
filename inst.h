@@ -21,6 +21,6 @@ bool rot(InstArg *arg); // [A] rotate reg given times
 bool jmp(InstArg *arg); // [B] jump to mem if given reg == reg 0
 bool hlt(InstArg *arg); // [C] stop!
 
-uint32_t adf_conv(uint8_t, uint8_t, uint8_t);
+uint32_t adf_conv(uint8_t, uint8_t, uint8_t, bool);
 bool pci(InstArg *arg); // increments PC
 #endif
