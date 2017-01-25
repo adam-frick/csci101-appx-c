@@ -2,7 +2,7 @@ src = $(wildcard *.c)
 obj = $(src:.c=.o)
 bin = appx_c
 
-FLAGS = -Wall
+FLAGS = -Wall -std=c99
 LDFLAGS = 
 
 $(bin): $(obj)
